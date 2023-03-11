@@ -4,7 +4,7 @@ server deployed on AWS LightSail us-east-1
 
 domain: tbd
 
-ip address:
+IP address:
 
       3.215.107.112
       2600:1f18:115a:4d00:3313:1a93:509:70e8
@@ -14,6 +14,7 @@ ip address:
     Language: Python
     SSL: Caddy Let's encrypt
     API Service: Gunicorn
+    API Framework: Flask
     Service manager: Supervisor
 
 ---
