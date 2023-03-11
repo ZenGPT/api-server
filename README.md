@@ -11,7 +11,7 @@ IP address:
 ---
 
     API reverse proxy: Caddy
-    Language: Python
+    Language: Python 3.8
     SSL: Caddy Let's encrypt
     API Service: Gunicorn
     API Framework: Flask
