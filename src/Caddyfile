@@ -1,0 +1,3 @@
+ai.gptdock.com {
+	reverse_proxy localhost:5001
+}
