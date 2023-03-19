@@ -31,13 +31,13 @@ def get_health():
 
 @app.route('/v1/ask', methods=['POST'])
 def ask_question():
-
     obj = request.get_json()
     question = obj['question']
     user_id = obj['user_id']
     client_id = obj['client_id']
+    stream = obj['stream']
 
-    return response_normal("Hello World!")
+    return response_normal(f"Hello World!, question: {question}, user_id: {user_id}, client_id: {client_id}, stream: {stream}")
 
 
 if __name__ == '__main__':

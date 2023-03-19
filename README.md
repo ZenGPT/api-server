@@ -23,7 +23,7 @@ This service is a stateless service, not necessary for auto snapshot and backup 
 
 ## API
 
-### GET /api/v1/health
+### GET /v1/health
 
     curl -X GET http://localhost:5001/api/v1/health
 
@@ -31,14 +31,14 @@ This service is a stateless service, not necessary for auto snapshot and backup 
         "status": "ok"
     }
 
-### POST /api/v1/ask
+### POST /v1/ask
 
-    curl -X POST http://localhost:5001/api/v1/ask -d '{"question": "What is the weather like today?", "client_id": "1234", "user_id": "1234"}'
+    curl -X POST http://localhost:5001/v1/ask -d '{"question": "What is the weather like today?", "client_id": "1234", "user_id": "1234", "stream": false}' -H "Content-Type: application/json"
 
     [tbd openai non-stream responses]
 
-### POST /api/v1/ask (respond as stream)
+### POST /v1/ask (respond as stream)
 
-    curl -X POST http://localhost:5001/api/v1/ask -d '{"question": "What is the weather like today?", "client_id": "1234", "user_id": "1234"}' -H "Accept: text/event-stream"
+    curl -X POST http://localhost:5001/v1/ask -d '{"question": "What is the weather like today?", "client_id": "1234", "user_id": "1234", "stream": true}' -H "Accept: text/event-stream" -H "Content-Type: application/json"
 
     [tbd openai stream responses]
