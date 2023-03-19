@@ -25,6 +25,10 @@ class InfraStack(Stack):
                 name="user_id",
                 type=dynamodb.AttributeType.STRING,
             ),
+            sort_key=dynamodb.Attribute(
+                name="client_id",
+                type=dynamodb.AttributeType.STRING,
+            ),
             billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST,
             removal_policy=RemovalPolicy.RETAIN,
             table_name="gpt_dock_user_data",
@@ -40,11 +44,4 @@ class InfraStack(Stack):
             removal_policy=RemovalPolicy.RETAIN,
             table_name="gpt_dock_client_data",
         )
-        # table.add_global_secondary_index(
-        #     partition_key=dynamodb.Attribute(
-        #         name="tg_id",
-        #         type=dynamodb.AttributeType.STRING,
-        #     ),
-        #     index_name="GPTDockUserDatam_index",
-        # )
 
