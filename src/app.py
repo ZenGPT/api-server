@@ -1,5 +1,7 @@
 import json
 from typing import Generator
+import openai
+import os
 
 from flask import Flask, request, Response
 from flask_cors import CORS
@@ -36,8 +38,20 @@ def ask_question():
     user_id = obj['user_id']
     client_id = obj['client_id']
     stream = obj['stream']
+    # call openAI API
+    openai.api_key = os.environ.get("OPENAI_API_KEY")
 
-    return response_normal(f"Hello World!, question: {question}, user_id: {user_id}, client_id: {client_id}, stream: {stream}")
+    prompt = question
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": question},
+        ]
+    )
+    answer = response['choices'][0]['message']['content']
+
+    return response_normal(f"Hello World!, answer: {answer} question: {question}, user_id: {user_id}, client_id: {client_id}, stream: {stream}")
 
 
 if __name__ == '__main__':
