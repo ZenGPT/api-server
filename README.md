@@ -85,7 +85,20 @@ The request body is a JSON object with the following fields:
 The request body is a JSON object with the following fields:
 
 - `question`: the question to ask the model
-- (or) `questions`: a list of strings to including the history of the conversation
+- (optional) `history`: a list of objects to including the history of the conversation
+    ```json
+    [
+        {
+            "role": "user",
+            "content": "hello."
+        },
+        {
+            "role": "assistant",
+            "content": "Hi."
+        },
+        ...
+    ]   
+    ```
 - `client_id`: the client id of the user
 - `user_id`: the user id of the user
 - `stream`: whether to stream the response or not
