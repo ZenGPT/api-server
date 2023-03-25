@@ -7,8 +7,8 @@ flask==2.2.3
 flask_cors
 # flask_cognito
 python-dotenv==1.0.0
-boto3==1.26.94
-pyopenssl
+boto3==1.26.99
+pyopenssl==23.1.0
 ratelimiter
 pytelegrambotapi
 backoff
