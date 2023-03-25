@@ -42,7 +42,7 @@ def ask_question():
         return response_not_enough_token
 
     request_data = function_call.get_request_data(prompt, f'{client_id}_{user_id}', stream)
-
+    res = function_call.open_ai_call(request_data)
     if stream:
         def get_res():
             prompt_tokens_stream = tokens
@@ -70,9 +70,7 @@ def ask_question():
             database.deduct_client_token(client_id, credit_stream)
             database.increase_user_token_used(user_id, client_id, credit_stream)
         return response_normal(get_res())
-
     else:
-        res = function_call.open_ai_call(request_data)
         completion_tokens = res['usage']['completion_tokens']
         prompt_tokens = res['usage']['prompt_tokens']
         total_tokens = completion_tokens + prompt_tokens + tokens
