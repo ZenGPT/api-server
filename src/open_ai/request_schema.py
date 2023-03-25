@@ -3,7 +3,6 @@ from schema import Schema, Optional, Or
 open_ai_schema = Schema({
     'model': str,
     'prompt': Or(str, list),
-    'user_token': str,
     Optional('temperature'): Or(float, int),
     Optional('max_tokens'): int,
     Optional('top_p'): Or(float, int),
