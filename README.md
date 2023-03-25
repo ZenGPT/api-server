@@ -94,6 +94,18 @@ The request body is a JSON object with the following fields:
 
     curl -X POST http://localhost:5001/v1/ask -d '{"question": "What is the weather like today?", "client_id": "1234", "user_id": "1234", "stream": true}' -H "Accept: text/event-stream" -H "Content-Type: application/json"
 
+    data: {"id": "chatcmpl-6xsye6iaNWJWwhcWMjJiGqGEX35S5", "object": "chat.completion.chunk", "created": 1679730704, "model": "gpt-3.5-turbo-0301", "choices": [{"delta": {"role": "assistant"}, "index": 0, "finish_reason": null}]}
+    
+    data: {"id": "chatcmpl-6xsye6iaNWJWwhcWMjJiGqGEX35S5", "object": "chat.completion.chunk", "created": 1679730704, "model": "gpt-3.5-turbo-0301", "choices": [{"delta": {"content": "I"}, "index": 0, "finish_reason": null}]}
+
+    data: {"id": "chatcmpl-6xsye6iaNWJWwhcWMjJiGqGEX35S5", "object": "chat.completion.chunk", "created": 1679730704, "model": "gpt-3.5-turbo-0301", "choices": [{"delta": {"content": " Channel"}, "index": 0, "finish_reason": null}]}
+
+    data: {"id": "chatcmpl-6xsye6iaNWJWwhcWMjJiGqGEX35S5", "object": "chat.completion.chunk", "created": 1679730704, "model": "gpt-3.5-turbo-0301", "choices": [{"delta": {"content": " Channel"}, "index": 0, "finish_reason": null}]}
+
+    data: {"id": "chatcmpl-6xsye6iaNWJWwhcWMjJiGqGEX35S5", "object": "chat.completion.chunk", "created": 1679730704, "model": "gpt-3.5-turbo-0301", "choices": [{"delta": {"content": "."}, "index": 0, "finish_reason": null}]}
+    
+    data: {"id": "chatcmpl-6xsye6iaNWJWwhcWMjJiGqGEX35S5", "object": "chat.completion.chunk", "created": 1679730704, "model": "gpt-3.5-turbo-0301", "choices": [{"delta": {}, "index": 0, "finish_reason": "stop"}]}
+
 > Note: The stream respond will be multiple SSE events, each event is an utf8 string starting with `data: `. and ending with `\n\n`. The data is a JSON object with the following fields:
 ```json
     {

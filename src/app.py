@@ -50,10 +50,8 @@ def ask_question():
             try:
                 for response in res:
                     completion_content += response['choices'][0]['delta'].get('content') or ''
-                    print(completion_content)
                     yield 'data: ' + json.dumps(response) + '\n\n'
-            except Exception as e:
-                print(e)
+            except Exception:
                 # here we catch all exceptions as a stop of generating the response
                 response = {
                     'choices': [
