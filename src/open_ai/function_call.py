@@ -70,7 +70,6 @@ def get_request_data(prompt: [dict], client_user_id: str, stream: bool) -> dict:
     return {
         "prompt": prompt,
         "temperature": 0.9,
-        "max_tokens": None,
         "top_p": 1,
         "frequency_penalty": 0,
         "presence_penalty": 0.4,
