@@ -6,7 +6,9 @@ import openai
 import tiktoken
 
 from open_ai.request_schema import open_ai_schema
+from dotenv import load_dotenv
 
+load_dotenv()
 
 default_model_name = "gpt-3.5-turbo"
 
@@ -14,7 +16,7 @@ default_model_name = "gpt-3.5-turbo"
 @backoff.on_exception(backoff.expo, openai.error.RateLimitError, max_time=10)
 def open_ai_call(options):
     d = open_ai_schema.validate(options)
-    openai.api_key = d['user_token']
+    openai.api_key = os.getenv('OPEN_AI_KEY')
     return openai.ChatCompletion.create(
         model=d.get('model', default_model_name),
         messages=d.get('prompt', ''),
