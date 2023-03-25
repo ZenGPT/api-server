@@ -45,7 +45,7 @@ def ask_question():
 
     if stream:
         def get_res():
-            prompt_tokens_stream = len(tokens)
+            prompt_tokens_stream = tokens
             completion_content = ''
             try:
                 for response in res:
@@ -73,7 +73,7 @@ def ask_question():
         res = function_call.open_ai_call(request_data)
         completion_tokens = res['usage']['completion_tokens']
         prompt_tokens = res['usage']['prompt_tokens']
-        total_tokens = completion_tokens + prompt_tokens + len(tokens)
+        total_tokens = completion_tokens + prompt_tokens + tokens
         database.deduct_client_token(client_id, total_tokens)
         database.increase_user_token_used(user_id, client_id, total_tokens)
         return response_normal(res)
