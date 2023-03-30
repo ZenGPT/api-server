@@ -1,3 +1,15 @@
+# Development
+
+## Prerequisites
+1. Python 3.8 ~ 3.10. AWS sdk is not compatible with Python 3.11 yet.
+2. AWS account set up with credentials in `~/.aws/config`
+
+## Setup
+
+    pip3 install -r requirements.txt
+    cd src
+    python3.x app.py
+
 # api-server
 
 server deployed on AWS LightSail us-east-1
