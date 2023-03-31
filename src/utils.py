@@ -28,7 +28,7 @@ def response_ratelimit(s):
 def response_normal(s):
     if isinstance(s, Generator):
         return Response(status=200, response=s,
-                        mimetype='text/data-stream',
+                        mimetype='text/event-stream',
                         headers={'Access-Control-Allow-Origin': '*'})
     if isinstance(s, str):
         return Response(status=200, response=json.dumps({'msg': s}), content_type='application/json')
