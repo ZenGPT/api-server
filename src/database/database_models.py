@@ -15,7 +15,6 @@ class FloatAttribute(Attribute[float]):
     """
     Unlike NumberAttribute, this attribute has its type hinted as 'float'.
     """
-
     attr_type = NumberAttribute.attr_type
     serialize = NumberAttribute.serialize  # type: ignore
     deserialize = NumberAttribute.deserialize  # type: ignore
@@ -40,18 +39,23 @@ class IntAttribute(Attribute[int]):
         return json.loads(value)
 
 
-class GPTDockClientData(Model):
+class GPTDockBaseModel(Model):
     class Meta:
-        table_name = "gpt_dock_client_data"
-        region = "us-east-1"
+        aws_access_key_id = os.getenv("AWS_ACCESS_KEY_ID")
+        aws_secret_access_key = os.getenv("AWS_SECRET_ACCESS_KEY")
+        region = os.getenv("AWS_REGION")
         if os.getenv("DYNAMODB_HOST"):
             host = os.getenv("DYNAMODB_HOST")
+
+
+class GPTDockClientData(GPTDockBaseModel):
+    class Meta:
+        table_name = "gpt_dock_client_data"
 
     client_id = UnicodeAttribute(hash_key=True)
     _updated_at = UTCDateTimeAttribute()
     token_quota = IntAttribute(default=0)
     config = JSONAttribute(null=True)
-
     version = VersionAttribute()
 
     def save(self,
@@ -67,19 +71,15 @@ class GPTDockClientData(Model):
         return self.__repr__()
 
 
-class GPTDockUserData(Model):
+class GPTDockUserData(GPTDockBaseModel):
     class Meta:
         table_name = "gpt_dock_user_data"
-        region = "us-east-1"
-        if os.getenv("DYNAMODB_HOST"):
-            host = os.getenv("DYNAMODB_HOST")
 
     user_id = UnicodeAttribute(hash_key=True)
     client_id = UnicodeAttribute(range_key=True)
     _updated_at = UTCDateTimeAttribute()
     token_used = IntAttribute(default=0)
     config = JSONAttribute(null=True)
-
     version = VersionAttribute()
 
     def save(self,

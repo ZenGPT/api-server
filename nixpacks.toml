@@ -1,0 +1,4 @@
+providers = ["python"]
+
+[start]
+cmd = "gunicorn app:app --pythonpath src --config src/gunicorn.conf.py"
