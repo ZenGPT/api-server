@@ -82,11 +82,12 @@ Response:
 
 ```shell
 curl --request GET \
-  --url "http://localhost:5001/v1/client/info?client_id=<client_id>" \
+  --url "http://localhost:5001/v1/client/info?client_id=<client_id>&product_id=<product_id>" \
   --header 'Authorization: Bearer <your_pre_shared_key>' 
 ```
 
 * `client_id`: the client id of the user
+* `product_id`: the product id of the user
 
 Response example:
 
@@ -107,6 +108,7 @@ curl --request POST \
   "question": "Who are you?",
   "user_id": 1,
   "client_id": 1,
+  "product_id": 1,
   "stream": false
 }'
 ```
@@ -115,6 +117,7 @@ The request body is a JSON object with the following fields:
 
 - `question`: the question to ask the model
 - `history` (optional): a list of objects to including the history of the conversation
+- `product_id`: the product id of the user
 - `client_id`: the client id of the user
 - `user_id`: the user id of the user
 - `stream`: whether to stream the response or not
@@ -126,6 +129,7 @@ Body example:
   "question": "Who are you?",
   "user_id": 1,
   "client_id": 1,
+  "product_id": 1,
   "stream": false,
   "history": [
     {
@@ -177,6 +181,7 @@ curl --request POST \
   "question": "Who are you?",
   "user_id": 1,
   "client_id": 1,
+  "product_id": 1,
   "stream": true
 }'
 ```

@@ -26,7 +26,7 @@ class InfraStack(Stack):
                 type=dynamodb.AttributeType.STRING,
             ),
             sort_key=dynamodb.Attribute(
-                name="client_id",
+                name="org_id",  # <client_id>-<product_id>
                 type=dynamodb.AttributeType.STRING,
             ),
             billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST,
@@ -38,6 +38,10 @@ class InfraStack(Stack):
             "GPTDockClientData",
             partition_key=dynamodb.Attribute(
                 name="client_id",
+                type=dynamodb.AttributeType.STRING,
+            ),
+            sort_key=dynamodb.Attribute(
+                name="product_id",
                 type=dynamodb.AttributeType.STRING,
             ),
             billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST,

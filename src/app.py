@@ -1,5 +1,3 @@
-import os
-
 from dotenv import load_dotenv
 from flask import Flask
 from flask_cors import CORS
@@ -27,10 +25,11 @@ def get_health():
 @auth_decorator()
 def get_client_info():
     client_id = request.args.get('client_id')
+    product_id = request.args.get('product_id')
     if not client_id:
         return response_bad_request('client_id must be provided')
 
-    client = database.get_client(client_id)
+    client = database.get_client(client_id, product_id)
     if not client:
         return response_not_found('client not found')
 
@@ -42,15 +41,16 @@ def get_client_info():
 def ask_question():
     obj = request.get_json()
     try:
-        user_id = obj['user_id']
-        client_id = obj['client_id']
+        user_id = str(obj['user_id'])
+        client_id = str(obj['client_id'])
+        product_id = str(obj['product_id'])
         stream = obj['stream']
         question = obj['question']
     except KeyError:
-        return response_bad_request('Missing required parameters, user_id, client_id, stream, question, pre_shared_key must be provided')
+        return response_bad_request('Missing required parameters, user_id, client_id, stream, question, product_id must be provided')
     history = obj.get('history') or []
     history.append({"role": "user", "content": question})
-    client = database.get_client(client_id)
+    client = database.get_client(client_id, product_id)
     prompt, tokens = function_call.get_prompt(history)
 
     # now we check if the client has enough tokens (roughly 2x of prompt tokens)
@@ -81,15 +81,15 @@ def ask_question():
             yield 'data: [DONE]\n\n'
             completion_tokens_stream = function_call.get_token_count(completion_content)
             credit_stream = prompt_tokens_stream + completion_tokens_stream
-            database.deduct_client_token(client_id, credit_stream)
-            database.increase_user_token_used(user_id, client_id, credit_stream)
+            database.deduct_client_token(client_id, product_id, credit_stream)
+            database.increase_user_token_used(user_id, client_id, product_id, credit_stream)
         return response_normal(get_res())
     else:
         completion_tokens = res['usage']['completion_tokens']
         prompt_tokens = res['usage']['prompt_tokens']
         total_tokens = completion_tokens + prompt_tokens + tokens
-        database.deduct_client_token(client_id, total_tokens)
-        database.increase_user_token_used(user_id, client_id, total_tokens)
+        database.deduct_client_token(client_id, product_id, total_tokens)
+        database.increase_user_token_used(user_id, client_id, product_id, total_tokens)
         return response_normal(res)
 
 

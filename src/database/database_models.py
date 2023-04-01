@@ -53,6 +53,7 @@ class GPTDockClientData(GPTDockBaseModel):
         table_name = "gpt_dock_client_data"
 
     client_id = UnicodeAttribute(hash_key=True)
+    product_id = UnicodeAttribute(range_key=True)
     _updated_at = UTCDateTimeAttribute()
     token_quota = IntAttribute(default=0)
     max_quota = IntAttribute(default=0)
@@ -77,7 +78,7 @@ class GPTDockUserData(GPTDockBaseModel):
         table_name = "gpt_dock_user_data"
 
     user_id = UnicodeAttribute(hash_key=True)
-    client_id = UnicodeAttribute(range_key=True)
+    org_id = UnicodeAttribute(range_key=True)  # client_id-product_id
     _updated_at = UTCDateTimeAttribute()
     token_used = IntAttribute(default=0)
     config = JSONAttribute(null=True)
@@ -90,7 +91,7 @@ class GPTDockUserData(GPTDockBaseModel):
         return super().save(condition, settings)
 
     def __repr__(self):
-        return f"GPTDockUserData(user_id='{self.user_id}', client_id='{self.client_id}', token_quota={self.token_quota})"
+        return f"GPTDockUserData(user_id='{self.user_id}', org_id={self.org_id}, token_used={self.token_used})"
 
     def __str__(self):
         return self.__repr__()
