@@ -25,7 +25,7 @@ def _init_client(client_id) -> GPTDockClientData:
     :param client_id:
     :return:
     """
-    obj = GPTDockClientData(client_id=client_id, token_quota=default_token_quota)
+    obj = GPTDockClientData(client_id=client_id, token_quota=default_token_quota, max_quota=default_token_quota)
     obj.save()
     return obj
 
@@ -42,6 +42,13 @@ def _init_user(user_id, client_id) -> GPTDockUserData:
     obj = GPTDockUserData(user_id=user_id, client_id=client_id)
     obj.save()
     return obj
+
+
+def check_client(client_id) -> GPTDockClientData or None:
+    try:
+        return GPTDockClientData.get(str(client_id))
+    except DoesNotExist:
+        return None
 
 
 def get_client(client_id) -> GPTDockClientData:

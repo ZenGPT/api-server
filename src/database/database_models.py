@@ -55,6 +55,7 @@ class GPTDockClientData(GPTDockBaseModel):
     client_id = UnicodeAttribute(hash_key=True)
     _updated_at = UTCDateTimeAttribute()
     token_quota = IntAttribute(default=0)
+    max_quota = IntAttribute(default=0)
     config = JSONAttribute(null=True)
     version = VersionAttribute()
 

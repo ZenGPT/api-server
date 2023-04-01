@@ -23,6 +23,20 @@ def get_health():
     return response_normal({"status": "ok"})
 
 
+@app.route('/v1/client/info', methods=['GET'])
+@auth_decorator()
+def get_client_info():
+    client_id = request.args.get('client_id')
+    if not client_id:
+        return response_bad_request('client_id must be provided')
+
+    client = database.get_client(client_id)
+    if not client:
+        return response_not_found('client not found')
+
+    return response_normal({'client_id': client.client_id, 'quota_used': client.max_quota - client.token_quota, 'max_quota': client.max_quota})
+
+
 @app.route('/v1/ask', methods=['POST'])
 @auth_decorator()
 def ask_question():
