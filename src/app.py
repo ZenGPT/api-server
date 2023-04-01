@@ -1,5 +1,7 @@
+import os
+
 from dotenv import load_dotenv
-from flask import Flask, request
+from flask import Flask
 from flask_cors import CORS
 from utils import *
 from database import database
@@ -22,6 +24,7 @@ def get_health():
 
 
 @app.route('/v1/ask', methods=['POST'])
+@auth_decorator()
 def ask_question():
     obj = request.get_json()
     try:
@@ -30,8 +33,7 @@ def ask_question():
         stream = obj['stream']
         question = obj['question']
     except KeyError:
-        return response_bad_request('Missing required parameters, user_id, client_id, stream, question must be provided')
-
+        return response_bad_request('Missing required parameters, user_id, client_id, stream, question, pre_shared_key must be provided')
     history = obj.get('history') or []
     history.append({"role": "user", "content": question})
     client = database.get_client(client_id)
