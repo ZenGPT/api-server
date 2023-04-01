@@ -1,3 +1,5 @@
+import os
+
 from dotenv import load_dotenv
 from flask import Flask, request
 from flask_cors import CORS
@@ -29,8 +31,13 @@ def ask_question():
         client_id = obj['client_id']
         stream = obj['stream']
         question = obj['question']
+        pre_shared_key = obj['pre_shared_key']
     except KeyError:
-        return response_bad_request('Missing required parameters, user_id, client_id, stream, question must be provided')
+        return response_bad_request('Missing required parameters, user_id, client_id, stream, question, pre_shared_key must be provided')
+
+    if pre_shared_key != os.getenv('PRE_SHARED_KEY'):
+        # If the pre_shared_key is not correct, we return 403
+        return response_forbidden
 
     history = obj.get('history') or []
     history.append({"role": "user", "content": question})

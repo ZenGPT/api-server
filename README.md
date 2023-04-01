@@ -10,9 +10,13 @@ DEFAULT_TOKEN_QUOTA=500000
 AWS_ACCESS_KEY_ID=
 AWS_SECRET_ACCESS_KEY=
 AWS_REGION=us-east-1
+PRE_SHARED_KEY=
 ```
 
 The server is using DynamoDB as the database, so you need to set up the AWS credentials.
+Also you need to set up the OpenAI API key and the pre-shared key for the API.
+
+Both BFF and API server are using the same pre-shared key. Any request without the pre-shared key will be rejected as 403.
 
 Create a virtual environment and install the dependencies:
 
@@ -84,7 +88,8 @@ curl --request POST \
   "question": "Who are you?",
   "user_id": 1,
   "client_id": 1,
-  "stream": false
+  "stream": false,
+  "pre_shared_key": "your_pre_shared_key"
 }'
 ```
 
@@ -95,6 +100,7 @@ The request body is a JSON object with the following fields:
 - `client_id`: the client id of the user
 - `user_id`: the user id of the user
 - `stream`: whether to stream the response or not
+- `pre_shared_key`: the pre-shared key for the API
 
 Body example:
 
@@ -113,7 +119,8 @@ Body example:
       "role": "assistant",
       "content": "Hi."
     }
-  ]
+  ],
+  "pre_shared_key": "your_pre_shared_key"
 }
 ```
 
@@ -153,7 +160,8 @@ curl --request POST \
   "question": "Who are you?",
   "user_id": 1,
   "client_id": 1,
-  "stream": true
+  "stream": true,
+  "pre_shared_key": "your_pre_shared_key"
 }'
 ```
 
