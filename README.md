@@ -84,12 +84,12 @@ Response:
 curl --request POST \
   --url http://localhost:5001/v1/ask \
   --header 'Content-Type: application/json' \
+  --header 'Authorization: Bearer <your_pre_shared_key>' \
   --data '{
   "question": "Who are you?",
   "user_id": 1,
   "client_id": 1,
-  "stream": false,
-  "pre_shared_key": "your_pre_shared_key"
+  "stream": false
 }'
 ```
 
@@ -119,8 +119,7 @@ Body example:
       "role": "assistant",
       "content": "Hi."
     }
-  ],
-  "pre_shared_key": "your_pre_shared_key"
+  ]
 }
 ```
 
@@ -156,6 +155,7 @@ Response example:
 curl --request POST \
   --url http://localhost:5001/v1/ask \
   --header 'Content-Type: application/json' \
+  --header 'Authorization: Bearer <your_pre_shared_key>' \
   --data '{
   "question": "Who are you?",
   "user_id": 1,

@@ -1,7 +1,7 @@
 import os
 
 from dotenv import load_dotenv
-from flask import Flask, request
+from flask import Flask
 from flask_cors import CORS
 from utils import *
 from database import database
@@ -24,6 +24,7 @@ def get_health():
 
 
 @app.route('/v1/ask', methods=['POST'])
+@auth_decorator()
 def ask_question():
     obj = request.get_json()
     try:
@@ -31,14 +32,8 @@ def ask_question():
         client_id = obj['client_id']
         stream = obj['stream']
         question = obj['question']
-        pre_shared_key = obj['pre_shared_key']
     except KeyError:
         return response_bad_request('Missing required parameters, user_id, client_id, stream, question, pre_shared_key must be provided')
-
-    if pre_shared_key != os.getenv('PRE_SHARED_KEY'):
-        # If the pre_shared_key is not correct, we return 403
-        return response_forbidden
-
     history = obj.get('history') or []
     history.append({"role": "user", "content": question})
     client = database.get_client(client_id)
