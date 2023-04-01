@@ -2,6 +2,7 @@ openAIModels = {
     'gpt-3.5-turbo': {
         'oneDollarToken': 1 / 0.002 * 1000,
         'name': 'gpt-3.5-turbo-0301',
+        'max_tokens': 4096,
     },
     'davinci': {
         'oneDollarToken': 1 / 0.02 * 1000,

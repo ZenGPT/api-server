@@ -57,7 +57,7 @@ def ask_question():
     if tokens * 2 > client.token_quota:
         return response_not_enough_token
 
-    request_data = function_call.get_request_data(prompt, f'{client_id}_{user_id}', stream)
+    request_data = function_call.get_request_data(prompt, tokens, f'{client_id}_{user_id}', stream)
     res = function_call.open_ai_call(request_data)
     if stream:
         def get_res():
@@ -78,7 +78,7 @@ def ask_question():
                     ]
                 }
                 yield 'data: ' + json.dumps(response) + '\n\n'
-
+            yield 'data: [DONE]\n\n'
             completion_tokens_stream = function_call.get_token_count(completion_content)
             credit_stream = prompt_tokens_stream + completion_tokens_stream
             database.deduct_client_token(client_id, credit_stream)

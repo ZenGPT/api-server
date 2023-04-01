@@ -118,7 +118,6 @@ The request body is a JSON object with the following fields:
 - `client_id`: the client id of the user
 - `user_id`: the user id of the user
 - `stream`: whether to stream the response or not
-- `pre_shared_key`: the pre-shared key for the API
 
 Body example:
 
@@ -178,8 +177,7 @@ curl --request POST \
   "question": "Who are you?",
   "user_id": 1,
   "client_id": 1,
-  "stream": true,
-  "pre_shared_key": "your_pre_shared_key"
+  "stream": true
 }'
 ```
 
@@ -291,6 +289,8 @@ data: {"id": "chatcmpl-709fWs9gLwfczWRasDCadymJm3vEG", "object": "chat.completio
 data: {"id": "chatcmpl-709fWs9gLwfczWRasDCadymJm3vEG", "object": "chat.completion.chunk", "created": 1680271522, "model": "gpt-3.5-turbo-0301", "choices": [{"delta": {"content": "."}, "index": 0, "finish_reason": null}]}
 
 data: {"id": "chatcmpl-709fWs9gLwfczWRasDCadymJm3vEG", "object": "chat.completion.chunk", "created": 1680271522, "model": "gpt-3.5-turbo-0301", "choices": [{"delta": {}, "index": 0, "finish_reason": "stop"}]}
+
+data: [DONE]
 ```
 
 Note: The stream respond will be multiple SSE events, each event is an utf8 string starting with `data: `. and ending
