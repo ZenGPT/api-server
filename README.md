@@ -78,6 +78,24 @@ Response:
 }
 ```
 
+### `GET /v1/client/info`
+
+```shell
+curl --request GET \
+  --url "http://localhost:5001/v1/client/info?client_id=<client_id>" \
+  --header 'Authorization: Bearer <your_pre_shared_key>' 
+```
+
+* `client_id`: the client id of the user
+
+Response example:
+
+```json
+{"client_id": "1234", "quota_used": 14061, "max_quota": 500000}
+```
+> or 404 if the client id is not found
+
+
 ### `POST /v1/ask`
 
 ```shell
