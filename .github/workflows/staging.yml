@@ -24,9 +24,9 @@ jobs:
           python-version: '3.10'
       - name: Generate Git Info File
         run: |
-          echo "Commit SHA: ${{ vars.GITHUB_SHA }}" > git-info.txt
-          echo "Author name: ${{ vars.GITHUB_ACTOR }}" >> git-info.txt
-          echo "Event path: ${{ vars.GITHUB_EVENT_PATH }}" >> git-info.txt
+          echo "Commit SHA: $GITHUB_SHA" > git-info.txt
+          echo "Author name: $GITHUB_ACTOR" >> git-info.txt
+          echo "Event path: $vars.GITHUB_EVENT_PATH" >> git-info.txt
 
       - name: Deploy to server
         uses: easingthemes/ssh-deploy@v4.1.8
