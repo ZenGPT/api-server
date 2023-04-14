@@ -26,7 +26,7 @@ jobs:
         run: |
           echo "Commit SHA: $GITHUB_SHA" > git-info.txt
           echo "Author name: $GITHUB_ACTOR" >> git-info.txt
-          echo "Event path: $vars.GITHUB_EVENT_PATH" >> git-info.txt
+          echo "Event path: $GITHUB_EVENT_PATH" >> git-info.txt
 
       - name: Deploy to server
         uses: easingthemes/ssh-deploy@v4.1.8
