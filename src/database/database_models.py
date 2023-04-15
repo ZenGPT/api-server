@@ -84,6 +84,13 @@ class GPTDockUserData(GPTDockBaseModel):
     config = JSONAttribute(null=True)
     version = VersionAttribute()
 
+    @classmethod
+    def count_users(self):
+        count = 0
+        for user in self.scan():
+            count += 1
+        return count
+
     def save(self,
              condition: Optional[Condition] = None,
              settings: OperationSettings = OperationSettings.default) -> Dict[str, Any]:

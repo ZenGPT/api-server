@@ -1,15 +1,26 @@
 from dotenv import load_dotenv
 from flask import Flask
 from flask_cors import CORS
+from flask_apscheduler import APScheduler
 from utils import *
 from database import database
 from open_ai import function_call
-
+from monitor import axiom_client
 load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
+scheduler = APScheduler()
+scheduler.init_app(app)
+scheduler.start()
 
+@scheduler.task('interval', id='heartbeat', seconds=int(os.getenv('MONITER_HEARBEAT_INTERVAL_SECONDS')),misfire_grace_time=int(os.getenv('MONITER_DEFAULT_MISFIRE_GRACE_TIME_SECONDS')))
+def heartbeat_task():
+    axiom_client.ingest_heartbeat()
+
+@scheduler.task('interval', id='users_count', seconds=int(os.getenv('MONITER_USERS_COUNT_INTERVAL_SECONDS')),misfire_grace_time=int(os.getenv('MONITER_DEFAULT_MISFIRE_GRACE_TIME_SECONDS')))
+def users_count_task():
+    axiom_client.ingest_users_count(database.get_users_count())
 
 @app.route('/')
 def hello_world():  # put application's code here
@@ -22,6 +33,7 @@ def get_health():
 
 
 @app.route('/v1/client/info', methods=['GET'])
+@monitor_decorator()
 @auth_decorator()
 def get_client_info():
     client_id = request.args.get('client_id')
@@ -37,6 +49,7 @@ def get_client_info():
 
 
 @app.route('/v1/ask', methods=['POST'])
+@monitor_decorator()
 @auth_decorator()
 def ask_question():
     obj = request.get_json()
