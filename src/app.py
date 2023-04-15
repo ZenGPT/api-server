@@ -67,6 +67,15 @@ def ask_question():
                 for response in res:
                     completion_content += response['choices'][0]['delta'].get('content') or ''
                     yield 'data: ' + json.dumps(response) + '\n\n'
+
+            except GeneratorExit:
+                #  this happens when user stops the generation, we still need to deduct the credit
+                completion_tokens_stream = function_call.get_token_count(completion_content)
+                credit_stream = prompt_tokens_stream + completion_tokens_stream
+                database.deduct_client_token(client_id, product_id, credit_stream)
+                database.increase_user_token_used(user_id, client_id, product_id, credit_stream)
+                raise
+
             except Exception:
                 # here we catch all exceptions as a stop of generating the response
                 response = {
