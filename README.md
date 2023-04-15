@@ -62,6 +62,22 @@ Service manager: Supervisor
 
 This service is a stateless service, not necessary for auto snapshot and backup on server.
 
+#### Deployment steps
+
+1. Create a Lightsail instance
+2. SSH into the instance
+3. Clone this repo
+4. Install dependencies
+5. Install Caddy
+6. Install Supervisor
+7. Install Gunicorn
+8. Install Gevent
+9. Install Python 3.8
+10. Follow the instructions in the `Getting Started` section to set up the environment variables
+11. Copy the `gptdock-supervisor.conf` file to `/etc/supervisor/conf.d/`
+12. Update supervisor config: `sudo supervisorctl reread && sudo supervisorctl update`
+
+
 ## API
 
 ### `GET /v1/health`
