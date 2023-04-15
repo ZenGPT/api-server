@@ -1,0 +1,28 @@
+name: Release
+on:
+  release:
+    types: [prereleased, released]
+
+jobs:
+  release:
+    name: ${{ github.event.release.tag_name }} to production
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.release.tag_name }}
+      - name: Deploy to server
+        uses: easingthemes/ssh-deploy@v4.1.8
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.HOST_IP }}
+          REMOTE_USER: ${{ secrets.HOST_USER }}
+          TARGET: /home/${{ secrets.HOST_USER }}/api-server/
+          EXCLUDE: "/.git/"
+          SCRIPT_AFTER: |
+            cd api-server
+            sudo pip3 install -r requirements.txt
+            sudo rm -rf __pycache__
+            sudo supervisorctl restart all
