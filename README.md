@@ -22,7 +22,7 @@ Create a virtual environment and install the dependencies:
 
 ```shell
 python -m venv venv
-source venv/bin/activate
+source venv/bin/activate  #window： venv\Scripts\activate
 pip install -r requirements.txt
 ```
 

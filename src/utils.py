@@ -3,7 +3,7 @@ import os
 from typing import Generator
 from functools import wraps
 from flask import Response, redirect, request
-
+from monitor import axiom_client
 
 def auth_decorator():
     def _decorator(f):
@@ -20,6 +20,16 @@ def auth_decorator():
 
             result = f(*args, **kwargs)
             # after the function
+            return result
+        return __decorator
+    return _decorator
+
+def monitor_decorator():
+    def _decorator(f):
+        @wraps(f)
+        def __decorator(*args, **kwargs):
+            result = f(*args, **kwargs)
+            axiom_client.ingest_http_request(request,result)
             return result
         return __decorator
     return _decorator

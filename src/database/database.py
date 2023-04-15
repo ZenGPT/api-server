@@ -5,7 +5,7 @@ from pynamodb.exceptions import DoesNotExist, PutError
 import backoff
 from database.database_models import *
 from dotenv import load_dotenv
-
+from monitor import axiom_client
 load_dotenv()
 
 logging.getLogger('backoff').addHandler(logging.StreamHandler())
@@ -65,6 +65,12 @@ def get_user(user_id, client_id, product_id) -> GPTDockUserData:
         return _init_user(user_id, client_id, product_id)
 
 
+def get_users_count()-> int:
+    try:
+        return GPTDockUserData.count_users()
+    except DoesNotExist:
+        return None
+
 @backoff.on_exception(backoff.expo, PutError, max_tries=3)
 def set_client_config(client_id: str, product_id: str, config: dict):
     resp = get_client(client_id, product_id)
@@ -92,6 +98,7 @@ def increase_user_token_used(user_id, client_id, product_id, amount):
     user = get_user(user_id, client_id, product_id)
     user.token_used += amount
     user.save()
+    axiom_client.ingest_token_usage(user_id, client_id, product_id, amount)
 
 
 @backoff.on_exception(backoff.expo, PutError, max_tries=10)
