@@ -11,9 +11,9 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
+scheduler = APScheduler()
 moniter_enable=os.getenv('MONITER_ENABLE','False')=='True'
 if moniter_enable:
-    scheduler = APScheduler()
     scheduler.init_app(app)
     scheduler.start()
 
