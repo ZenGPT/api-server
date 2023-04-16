@@ -10,9 +10,12 @@ load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
-scheduler = APScheduler()
-scheduler.init_app(app)
-scheduler.start()
+
+moniter_enable=os.getenv('MONITER_ENABLE','False')=='True'
+if moniter_enable:
+    scheduler = APScheduler()
+    scheduler.init_app(app)
+    scheduler.start()
 
 @scheduler.task('interval', id='heartbeat', seconds=int(os.getenv('MONITER_HEARBEAT_INTERVAL_SECONDS')),misfire_grace_time=int(os.getenv('MONITER_DEFAULT_MISFIRE_GRACE_TIME_SECONDS')))
 def heartbeat_task():

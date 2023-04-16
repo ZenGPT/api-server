@@ -7,19 +7,17 @@ load_dotenv()
 
 default_dataset=os.getenv('MONITER_AXIOM_DATASET')
 moniter_enable=os.getenv('MONITER_ENABLE','False')=='True'
-
+heartbeat_url=os.getenv('MONITER_HEARBEAT_URL')
 def ingest_heartbeat():
     if not moniter_enable:
         return
-    url=os.getenv('MONITER_HEARBEAT_URL')
-    response=requests.get(url)
-    client = axiom.Client(os.getenv('MONITER_AXIOM_API_TOKEN'), os.getenv('MONITER_AXIOM_ORG_ID'))
-    client.ingest_events(
+    response=requests.get(heartbeat_url)
+    create_client().ingest_events(
         dataset=default_dataset,
         events=[
             {
              "event_type": "heartbeat", 
-             "url": url,
+             "url": heartbeat_url,
              "status_code": response.status_code
             }
         ])
@@ -27,8 +25,7 @@ def ingest_heartbeat():
 def ingest_http_request(request,response):
     if not moniter_enable:
         return
-    client = axiom.Client(os.getenv('MONITER_AXIOM_API_TOKEN'), os.getenv('MONITER_AXIOM_ORG_ID'))
-    client.ingest_events(
+    create_client().ingest_events(
         dataset=default_dataset,
         events=[
             {
@@ -43,8 +40,7 @@ def ingest_http_request(request,response):
 def ingest_token_usage(user_id, client_id, product_id, amount):
     if not moniter_enable:
         return
-    client = axiom.Client(os.getenv('MONITER_AXIOM_API_TOKEN'), os.getenv('MONITER_AXIOM_ORG_ID'))
-    client.ingest_events(
+    create_client().ingest_events(
         dataset=default_dataset,
         events=[
             {
@@ -59,8 +55,7 @@ def ingest_token_usage(user_id, client_id, product_id, amount):
 def ingest_users_count(count):
     if not moniter_enable:
         return
-    client = axiom.Client(os.getenv('MONITER_AXIOM_API_TOKEN'), os.getenv('MONITER_AXIOM_ORG_ID'))
-    client.ingest_events(
+    create_client().ingest_events(
         dataset=default_dataset,
         events=[
             {
@@ -68,3 +63,6 @@ def ingest_users_count(count):
               "count": count
             }
         ])
+    
+def create_client():
+    return axiom.Client(os.getenv('MONITER_AXIOM_API_TOKEN'), os.getenv('MONITER_AXIOM_ORG_ID'))
