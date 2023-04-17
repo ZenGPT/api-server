@@ -4,16 +4,15 @@ on:
   push:
     tags-ignore:
       - '**' # do not run on tags
-    branches:
-      - '**'
+    branches: [ "main", "staging/**" ]
   pull_request:
-    branches:
-      - '**'
+    branches: [ "main", "staging/**" ]
 
 jobs:
   staging-deploy:
     name: Deploy to staging
     runs-on: ubuntu-latest
+    if: ${{ github.event_name != 'pull_request' }}
     environment: staging
     steps:
       - name: Checkout
@@ -41,7 +40,7 @@ jobs:
   draft-release:
     name: Create Draft release
     needs: staging-deploy
-    if: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' }}
+    if: ${{ github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
