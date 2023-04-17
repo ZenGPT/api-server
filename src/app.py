@@ -17,11 +17,11 @@ if moniter_enable:
     scheduler.init_app(app)
     scheduler.start()
 
-@scheduler.task('interval', id='heartbeat', seconds=int(os.getenv('MONITER_HEARBEAT_INTERVAL_SECONDS')),misfire_grace_time=int(os.getenv('MONITER_DEFAULT_MISFIRE_GRACE_TIME_SECONDS')))
+@scheduler.task('interval', id='heartbeat', seconds=int(os.getenv('MONITER_HEARBEAT_INTERVAL_SECONDS',60)),misfire_grace_time=int(os.getenv('MONITER_DEFAULT_MISFIRE_GRACE_TIME_SECONDS',60)))
 def heartbeat_task():
     axiom_client.ingest_heartbeat()
 
-@scheduler.task('interval', id='users_count', seconds=int(os.getenv('MONITER_USERS_COUNT_INTERVAL_SECONDS')),misfire_grace_time=int(os.getenv('MONITER_DEFAULT_MISFIRE_GRACE_TIME_SECONDS')))
+@scheduler.task('interval', id='users_count', seconds=int(os.getenv('MONITER_USERS_COUNT_INTERVAL_SECONDS',60)),misfire_grace_time=int(os.getenv('MONITER_DEFAULT_MISFIRE_GRACE_TIME_SECONDS',60)))
 def users_count_task():
     axiom_client.ingest_users_count(database.get_users_count())
 
