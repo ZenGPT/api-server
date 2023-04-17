@@ -86,10 +86,7 @@ class GPTDockUserData(GPTDockBaseModel):
 
     @classmethod
     def count_users(self):
-        count = 0
-        for user in self.scan():
-            count += 1
-        return count
+        return self.count()
 
     def save(self,
              condition: Optional[Condition] = None,
