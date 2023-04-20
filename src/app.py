@@ -15,15 +15,13 @@ scheduler = APScheduler()
 moniter_enable=os.getenv('MONITER_ENABLE','False')=='True'
 if moniter_enable:
     scheduler.init_app(app)
-    scheduler.start()
-
-@scheduler.task('interval', id='heartbeat', seconds=int(os.getenv('MONITER_HEARBEAT_INTERVAL_SECONDS',60)),misfire_grace_time=int(os.getenv('MONITER_DEFAULT_MISFIRE_GRACE_TIME_SECONDS',60)))
-def heartbeat_task():
-    axiom_client.ingest_heartbeat()
-
-@scheduler.task('interval', id='users_count', seconds=int(os.getenv('MONITER_USERS_COUNT_INTERVAL_SECONDS',3600)),misfire_grace_time=int(os.getenv('MONITER_DEFAULT_MISFIRE_GRACE_TIME_SECONDS',60)))
-def users_count_task():
-    axiom_client.ingest_users_count(database.get_users_count())
+    @scheduler.task('interval', id='heartbeat', max_instances=1,coalesce=True, seconds=int(os.getenv('MONITER_HEARBEAT_INTERVAL_SECONDS',60)),misfire_grace_time=int(os.getenv('MONITER_DEFAULT_MISFIRE_GRACE_TIME_SECONDS',60)))
+    def heartbeat_task():
+        axiom_client.ingest_heartbeat()
+    @scheduler.task('interval', id='users_count', max_instances=1,coalesce=True,seconds=int(os.getenv('MONITER_USERS_COUNT_INTERVAL_SECONDS',3600)),misfire_grace_time=int(os.getenv('MONITER_DEFAULT_MISFIRE_GRACE_TIME_SECONDS',60)))
+    def users_count_task():
+        axiom_client.ingest_users_count(database.get_users_count())
+scheduler.start()
 
 @app.route('/')
 def hello_world():  # put application's code here
