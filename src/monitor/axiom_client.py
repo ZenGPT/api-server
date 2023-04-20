@@ -1,7 +1,6 @@
 import os
 import requests
 import axiom
-import gevent
 from dotenv import load_dotenv
 
 load_dotenv()
