@@ -1,6 +1,7 @@
 import os
 import requests
 import axiom
+import gevent
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -18,7 +19,8 @@ def ingest_heartbeat():
             {
              "event_type": "heartbeat", 
              "url": heartbeat_url,
-             "status_code": response.status_code
+             "status_code": response.status_code,
+             "worker_id": get_worker_id()
             }
         ])
     
@@ -33,7 +35,8 @@ def ingest_http_request(request,response):
               "params":request.get_json(),
               "path": request.path,
               "method":request.method,
-              "status": response.status_code
+              "status": response.status_code,
+              "worker_id": get_worker_id()
             }
         ])
 
@@ -48,7 +51,8 @@ def ingest_token_usage(user_id, client_id, product_id, amount):
               "user_id":user_id,
               "client_id": client_id,
               "product_id":product_id,
-              "amount": amount
+              "amount": amount,
+              "worker_id": get_worker_id()
             }
         ])
     
@@ -60,9 +64,13 @@ def ingest_users_count(count):
         events=[
             {
               "event_type": "users_count",
-              "count": count
+              "count": count,
+              "worker_id": get_worker_id()
             }
         ])
     
 def create_client():
     return axiom.Client(os.getenv('MONITOR_AXIOM_API_TOKEN'), os.getenv('MONITOR_AXIOM_ORG_ID'))
+
+def get_worker_id():
+    return os.getpid()
