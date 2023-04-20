@@ -18,11 +18,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Generate Git Info File
-        run: |
-          echo "Commit SHA: $GITHUB_SHA" > git-info.txt
-          echo "Author name: $GITHUB_ACTOR" >> git-info.txt
-          echo "Event path: $GITHUB_EVENT_PATH" >> git-info.txt
-
+        uses: ./.github/actions/git-info
       - name: Deploy to server
         uses: easingthemes/ssh-deploy@v4.1.8
         with:
