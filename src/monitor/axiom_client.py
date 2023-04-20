@@ -5,11 +5,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-default_dataset=os.getenv('MONITER_AXIOM_DATASET')
-moniter_enable=os.getenv('MONITER_ENABLE','False')=='True'
-heartbeat_url=os.getenv('MONITER_HEARBEAT_URL')
+default_dataset=os.getenv('MONITOR_AXIOM_DATASET')
+monitor_enable=os.getenv('MONITOR_ENABLE','False')=='True'
+heartbeat_url=os.getenv('MONITOR_HEARBEAT_URL')
 def ingest_heartbeat():
-    if not moniter_enable:
+    if not monitor_enable:
         return
     response=requests.get(heartbeat_url)
     create_client().ingest_events(
@@ -23,7 +23,7 @@ def ingest_heartbeat():
         ])
     
 def ingest_http_request(request,response):
-    if not moniter_enable:
+    if not monitor_enable:
         return
     create_client().ingest_events(
         dataset=default_dataset,
@@ -38,7 +38,7 @@ def ingest_http_request(request,response):
         ])
 
 def ingest_token_usage(user_id, client_id, product_id, amount):
-    if not moniter_enable:
+    if not monitor_enable:
         return
     create_client().ingest_events(
         dataset=default_dataset,
@@ -53,7 +53,7 @@ def ingest_token_usage(user_id, client_id, product_id, amount):
         ])
     
 def ingest_users_count(count):
-    if not moniter_enable:
+    if not monitor_enable:
         return
     create_client().ingest_events(
         dataset=default_dataset,
@@ -65,4 +65,4 @@ def ingest_users_count(count):
         ])
     
 def create_client():
-    return axiom.Client(os.getenv('MONITER_AXIOM_API_TOKEN'), os.getenv('MONITER_AXIOM_ORG_ID'))
+    return axiom.Client(os.getenv('MONITOR_AXIOM_API_TOKEN'), os.getenv('MONITOR_AXIOM_ORG_ID'))
