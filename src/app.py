@@ -34,7 +34,6 @@ def get_health():
 
 
 @app.route('/v1/client/info', methods=['GET'])
-@monitor_decorator()
 @auth_decorator()
 def get_client_info():
     client_id = request.args.get('client_id')
