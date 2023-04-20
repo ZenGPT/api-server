@@ -11,6 +11,14 @@ AWS_ACCESS_KEY_ID=
 AWS_SECRET_ACCESS_KEY=
 AWS_REGION=us-east-1
 PRE_SHARED_KEY=
+MONITOR_ENABLE=True
+MONITOR_AXIOM_DATASET=gptdock
+MONITOR_AXIOM_API_TOKEN=
+MONITOR_AXIOM_ORG_ID=zenumltest-kes2
+MONITOR_HEARBEAT_URL=https://ai-staging.gptdock.com
+MONITOR_HEARBEAT_INTERVAL_SECONDS=60
+MONITOR_DEFAULT_MISFIRE_GRACE_TIME_SECONDS=60
+MONITOR_USERS_COUNT_INTERVAL_SECONDS=3600
 ```
 
 The server is using DynamoDB as the database, so you need to set up the AWS credentials.
@@ -22,7 +30,7 @@ Create a virtual environment and install the dependencies:
 
 ```shell
 python -m venv venv
-source venv/bin/activate  #window： venv\Scripts\activate
+source venv/bin/activate  #windows： venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
