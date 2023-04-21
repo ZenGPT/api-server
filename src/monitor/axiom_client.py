@@ -5,8 +5,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+def is_monitor_enable():
+    return os.getenv('MONITOR_ENABLE','False')=='True'
+
 default_dataset=os.getenv('MONITOR_AXIOM_DATASET')
-monitor_enable=os.getenv('MONITOR_ENABLE','False')=='True'
+monitor_enable= is_monitor_enable()
 heartbeat_url=os.getenv('MONITOR_HEARBEAT_URL')
 env=os.getenv('ENV','Dev')
 
@@ -69,6 +72,20 @@ def ingest_users_count(count):
             {
               "event_type": "users_count",
               "count": count,
+              "worker_id": get_worker_id(),
+              "environment":env
+            }
+        ])
+    
+def ingest_logging(message):
+    if not monitor_enable:
+        return
+    create_client().ingest_events(
+        dataset=default_dataset,
+        events=[
+            {
+              "event_type": "logging",
+              "log_record": message,
               "worker_id": get_worker_id(),
               "environment":env
             }
