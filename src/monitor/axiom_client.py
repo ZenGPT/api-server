@@ -8,6 +8,8 @@ load_dotenv()
 default_dataset=os.getenv('MONITOR_AXIOM_DATASET')
 monitor_enable=os.getenv('MONITOR_ENABLE','False')=='True'
 heartbeat_url=os.getenv('MONITOR_HEARBEAT_URL')
+env=os.getenv('ENV','Dev')
+
 def ingest_heartbeat():
     if not monitor_enable:
         return
@@ -19,7 +21,8 @@ def ingest_heartbeat():
              "event_type": "heartbeat", 
              "url": heartbeat_url,
              "status_code": response.status_code,
-             "worker_id": get_worker_id()
+             "worker_id": get_worker_id(),
+             "environment":env
             }
         ])
     
@@ -35,7 +38,8 @@ def ingest_http_request(request,response):
               "path": request.path,
               "method":request.method,
               "status": response.status_code,
-              "worker_id": get_worker_id()
+              "worker_id": get_worker_id(),
+              "environment":env
             }
         ])
 
@@ -51,7 +55,8 @@ def ingest_token_usage(user_id, client_id, product_id, amount):
               "client_id": client_id,
               "product_id":product_id,
               "amount": amount,
-              "worker_id": get_worker_id()
+              "worker_id": get_worker_id(),
+              "environment":env
             }
         ])
     
@@ -64,7 +69,8 @@ def ingest_users_count(count):
             {
               "event_type": "users_count",
               "count": count,
-              "worker_id": get_worker_id()
+              "worker_id": get_worker_id(),
+              "environment":env
             }
         ])
     
