@@ -39,9 +39,15 @@ def ingest_http_request(request,response):
               "method":request.method,
               "status_code":response.status_code,
               "worker_id": get_worker_id(),
-              "environment":env
+              "environment":env,
+              "response_fail_message": get_response_fail_message(response)
             }
         ])
+    
+def get_response_fail_message(response):
+    if response.status_code== 200:
+        return None
+    return response.get_data(as_text=True)
     
 def get_json_or_data(request):
     try:
@@ -75,6 +81,20 @@ def ingest_users_count(count):
             {
               "event_type": "users_count",
               "count": count,
+              "worker_id": get_worker_id(),
+              "environment":env
+            }
+        ])
+    
+def ingest_logging(record):
+    if not monitor_enable:
+        return
+    create_client().ingest_events(
+        dataset=default_dataset,
+        events=[
+            {
+              "event_type": "logging",
+              "log_record": record,
               "worker_id": get_worker_id(),
               "environment":env
             }
