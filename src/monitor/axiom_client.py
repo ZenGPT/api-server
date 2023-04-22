@@ -5,8 +5,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+def is_monitor_enable():
+    return os.getenv('MONITOR_ENABLE','False')=='True'
+
 default_dataset=os.getenv('MONITOR_AXIOM_DATASET')
-monitor_enable=os.getenv('MONITOR_ENABLE','False')=='True'
+monitor_enable= is_monitor_enable()
 heartbeat_url=os.getenv('MONITOR_HEARBEAT_URL')
 env=os.getenv('ENV','Dev')
 
