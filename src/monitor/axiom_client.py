@@ -34,14 +34,20 @@ def ingest_http_request(request,response):
         events=[
             {
               "event_type": "http_request",
-              "params":request.get_json(),
+              "params":get_json_or_data(request),
               "path": request.path,
               "method":request.method,
-              "status": response.status_code,
+              "status_code":response.status_code,
               "worker_id": get_worker_id(),
               "environment":env
             }
         ])
+    
+def get_json_or_data(request):
+    try:
+        return request.get_json()
+    except Exception as e:
+        return request.get_data(as_text=True)
 
 def ingest_token_usage(user_id, client_id, product_id, amount):
     if not monitor_enable:
