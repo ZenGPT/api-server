@@ -12,8 +12,7 @@ app = Flask(__name__)
 CORS(app)
 
 scheduler = APScheduler()
-monitor_enable=os.getenv('MONITOR_ENABLE','False')=='True'
-if monitor_enable:
+if axiom_client.monitor_enable:
     scheduler.init_app(app)
     @scheduler.task('interval', id='heartbeat', max_instances=1,coalesce=True, seconds=int(os.getenv('MONITOR_HEARBEAT_INTERVAL_SECONDS',60)),misfire_grace_time=int(os.getenv('MONITOR_DEFAULT_MISFIRE_GRACE_TIME_SECONDS',60)))
     def heartbeat_task():
@@ -29,6 +28,7 @@ def hello_world():  # put application's code here
 
 
 @app.route('/v1/health', methods=['GET'])
+@monitor_decorator()
 def get_health():
     return response_normal({"status": "ok"})
 
