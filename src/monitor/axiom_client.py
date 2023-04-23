@@ -45,7 +45,7 @@ def ingest_http_request(request,response):
         ])
     
 def get_response_fail_message(response):
-    if response.status_code== 200:
+    if response.status_code == requests.codes.ok:
         return None
     return response.get_data(as_text=True)
     
