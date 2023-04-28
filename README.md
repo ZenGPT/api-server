@@ -5,6 +5,7 @@
 Set up environment variables:
 
 ```shell
+ENV="Dev"  # Staging/Production
 OPEN_AI_KEY=
 DEFAULT_TOKEN_QUOTA=500000
 AWS_ACCESS_KEY_ID=

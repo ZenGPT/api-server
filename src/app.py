@@ -6,14 +6,15 @@ from utils import *
 from database import database
 from open_ai import function_call
 from monitor import axiom_client
+from monitor import axiom_logger_handler
 load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
 scheduler = APScheduler()
-monitor_enable=os.getenv('MONITOR_ENABLE','False')=='True'
-if monitor_enable:
+if axiom_client.monitor_enable:
+    axiom_logger_handler.init()
     scheduler.init_app(app)
     @scheduler.task('interval', id='heartbeat', max_instances=1,coalesce=True, seconds=int(os.getenv('MONITOR_HEARBEAT_INTERVAL_SECONDS',60)),misfire_grace_time=int(os.getenv('MONITOR_DEFAULT_MISFIRE_GRACE_TIME_SECONDS',60)))
     def heartbeat_task():
@@ -21,6 +22,10 @@ if monitor_enable:
     @scheduler.task('interval', id='users_count', max_instances=1,coalesce=True,seconds=int(os.getenv('MONITOR_USERS_COUNT_INTERVAL_SECONDS',3600)),misfire_grace_time=int(os.getenv('MONITOR_DEFAULT_MISFIRE_GRACE_TIME_SECONDS',60)))
     def users_count_task():
         axiom_client.ingest_users_count(database.get_users_count())
+    @app.errorhandler(Exception)
+    def handle_error(error):
+        axiom_logger_handler.log_exception()
+        return response_error
 scheduler.start()
 
 @app.route('/')
@@ -29,6 +34,7 @@ def hello_world():  # put application's code here
 
 
 @app.route('/v1/health', methods=['GET'])
+@monitor_decorator()
 def get_health():
     return response_normal({"status": "ok"})
 

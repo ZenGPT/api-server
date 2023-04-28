@@ -8,6 +8,8 @@ load_dotenv()
 default_dataset=os.getenv('MONITOR_AXIOM_DATASET')
 monitor_enable=os.getenv('MONITOR_ENABLE','False')=='True'
 heartbeat_url=os.getenv('MONITOR_HEARBEAT_URL')
+env=os.getenv('ENV','Dev')
+
 def ingest_heartbeat():
     if not monitor_enable:
         return
@@ -19,7 +21,8 @@ def ingest_heartbeat():
              "event_type": "heartbeat", 
              "url": heartbeat_url,
              "status_code": response.status_code,
-             "worker_id": get_worker_id()
+             "worker_id": get_worker_id(),
+             "environment":env
             }
         ])
     
@@ -31,13 +34,26 @@ def ingest_http_request(request,response):
         events=[
             {
               "event_type": "http_request",
-              "params":request.get_json(),
+              "params":get_json_or_data(request),
               "path": request.path,
               "method":request.method,
-              "status": response.status_code,
-              "worker_id": get_worker_id()
+              "status_code":response.status_code,
+              "worker_id": get_worker_id(),
+              "environment":env,
+              "response_fail_message": get_response_fail_message(response)
             }
         ])
+    
+def get_response_fail_message(response):
+    if response.status_code == requests.codes.ok:
+        return None
+    return response.get_data(as_text=True)
+    
+def get_json_or_data(request):
+    try:
+        return request.get_json()
+    except Exception as e:
+        return request.get_data(as_text=True)
 
 def ingest_token_usage(user_id, client_id, product_id, amount):
     if not monitor_enable:
@@ -51,7 +67,8 @@ def ingest_token_usage(user_id, client_id, product_id, amount):
               "client_id": client_id,
               "product_id":product_id,
               "amount": amount,
-              "worker_id": get_worker_id()
+              "worker_id": get_worker_id(),
+              "environment":env
             }
         ])
     
@@ -64,7 +81,22 @@ def ingest_users_count(count):
             {
               "event_type": "users_count",
               "count": count,
-              "worker_id": get_worker_id()
+              "worker_id": get_worker_id(),
+              "environment":env
+            }
+        ])
+    
+def ingest_logging(record):
+    if not monitor_enable:
+        return
+    create_client().ingest_events(
+        dataset=default_dataset,
+        events=[
+            {
+              "event_type": "logging",
+              "log_record": record,
+              "worker_id": get_worker_id(),
+              "environment":env
             }
         ])
     
