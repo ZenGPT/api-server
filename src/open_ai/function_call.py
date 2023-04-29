@@ -35,24 +35,33 @@ def open_ai_call(options):
     )
 
 
-def get_prompt(chat_history: [dict], with_chat_ai_prompt: bool = True) -> ([dict], int):
+def get_prompt(chat_history: [dict], with_chat_ai_prompt: bool = True, length_limit: bool = True) -> ([dict], int):
     """
     get prompt from chat history
+    :param length_limit:
     :param with_chat_ai_prompt:
     :param chat_history:
     :return:
     """
-    total_tokens = 0
+    total_tokens = 3  # every reply is primed with <|start|>assistant<|message|>
     history = []
+    model_info = openAIModels[default_model_name]
+    tokens_per_message = model_info['tokens_per_message']
+    tokens_per_name = model_info['tokens_per_name']
     for i in reversed(range(len(chat_history))):
         item = chat_history[i]
-        if 'content' not in item or 'role' not in item:
-            continue
-        line = item['role'] + ' : ' + item['content'] + '\n'
-        new_tokens = get_token_count(line)
-        if total_tokens+new_tokens > 3000 and 'gpt-3.5-turbo' in default_model_name:
+        new_tokens = tokens_per_message
+        if item.get("content") is None: continue  # 'content' is a required property
+        if item.get("role") is None: continue  # 'content' is a required property
+
+        for key, value in item.items():
+            if key == "name":
+                new_tokens += tokens_per_name
+            if value is None: continue
+            new_tokens += get_token_count(value, default_model_name)
+        if length_limit and total_tokens + new_tokens > 3000 and 'gpt-3.5-turbo' in default_model_name:
             break
-        if total_tokens+new_tokens > 6000 and 'gpt-4' in default_model_name:
+        if length_limit and total_tokens + new_tokens > 6000 and 'gpt-4' in default_model_name:
             break
         total_tokens += new_tokens
         history.append(item)
@@ -65,10 +74,17 @@ def get_prompt(chat_history: [dict], with_chat_ai_prompt: bool = True) -> ([dict
                        'Every code block must rendered as markdown with the program language name, '
                        'inline code will be wrapped by backtick mark. '
                        'All the formatting must be done by markdown. Render references as normal list with link instead of footnote.'
-                       f'\nKnowledge cutoff: 2021-09\nCurrent date: {datetime.now().strftime("%Y-%m-%d")}'
+                       f'Current date and time: {datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")} UTC+0',
         }
         history.append(prompt_item)
-        total_tokens += get_token_count(prompt_item['role'] + ' : ' + prompt_item['content'] + '\n', default_model_name)
+        new_tokens = tokens_per_message
+        for key, value in prompt_item.items():
+            new_tokens += get_token_count(value, default_model_name)
+            if key == "name":
+                new_tokens += tokens_per_name
+        total_tokens += new_tokens
+
+    total_tokens += 3  # every reply is primed with <|start|>assistant<|message|>
     return list(reversed(history)), total_tokens
 
 
