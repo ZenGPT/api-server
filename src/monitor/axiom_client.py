@@ -9,7 +9,7 @@ default_dataset=os.getenv('MONITOR_AXIOM_DATASET')
 monitor_enable=os.getenv('MONITOR_ENABLE','False')=='True'
 heartbeat_url=os.getenv('MONITOR_HEARBEAT_URL')
 env=os.getenv('ENV','Dev')
-platform=os.getenv('PLATFORM','')
+platform=os.getenv('MONITOR_PLATFORM','')
 def ingest_heartbeat():
     if not monitor_enable:
         return
