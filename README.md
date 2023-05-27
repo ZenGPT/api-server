@@ -5,7 +5,7 @@
 Set up environment variables:
 
 ```shell
-ENV="Dev"  # Staging/Production
+ENV=Dev  # Staging/Production
 OPEN_AI_KEY=
 DEFAULT_TOKEN_QUOTA=500000
 AWS_ACCESS_KEY_ID=
@@ -20,6 +20,7 @@ MONITOR_HEARBEAT_URL=https://ai-staging.gptdock.com
 MONITOR_HEARBEAT_INTERVAL_SECONDS=60
 MONITOR_DEFAULT_MISFIRE_GRACE_TIME_SECONDS=60
 MONITOR_USERS_COUNT_INTERVAL_SECONDS=3600
+MONITOR_PLATFORM=API-Server # ACE-Server
 ```
 
 The server is using DynamoDB as the database, so you need to set up the AWS credentials.
